@@ -1,0 +1,51 @@
+.form {
+  margin: 10px;
+  width: 100%;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.mainform {
+  font-size: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  min-height: 200px;
+}
+.input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 350px;
+}
+.input input {
+  border-radius: 10px;
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid #ccc;
+}
+
+.submitbutton {
+  font-size: 1.1rem;
+  font-family: "Lexend Deca";
+  font-weight: bold;
+  width: 300px;
+  margin: 20px;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+  background-color: #77b0aa;
+  border-radius: 10px;
+  border: none;
+  color: rgb(255, 255, 255);
+
+  cursor: pointer;
+}
+
+.message {
+  font-size: 1rem;
+  color: darkblue;
+}
