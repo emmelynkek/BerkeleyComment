@@ -1,0 +1,27 @@
+.title {
+  margin: 0 0 1rem;
+  line-height: 1.15;
+  font-size: 3.6rem;
+  text-align: center;
+}
+
+.row {
+  padding: 3rem 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.4rem;
+}
+
+.comment {
+  padding: 2rem;
+
+  text-align: justify;
+}
+
+.blue {
+  color: rgb(9, 9, 135);
+}
+.yellow {
+  color: rgb(238, 205, 18);
+}

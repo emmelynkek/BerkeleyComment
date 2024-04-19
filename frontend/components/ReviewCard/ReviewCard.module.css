@@ -1,0 +1,61 @@
+.reviewcard {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 0.2rem;
+  margin: 1rem 0rem;
+  background-color: white;
+  border-radius: 20px;
+  border: 1px solid darkgrey;
+  padding: 1rem;
+  transition: height 0.3s ease; /* Smooth transition for expanding height */
+  overflow: hidden; /* Ensures text truncation */
+}
+.name {
+  font-size: 1.4rem;
+  margin-left: 1rem;
+}
+.reviewheader {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.experience {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.experienceexpanded {
+  -webkit-line-clamp: none; /* Remove line clamp when expanded */
+  max-height: none; /* Allow content to expand fully */
+}
+
+.ratings {
+  font-size: 0.9rem;
+}
+
+.readmore {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.readmore button {
+  background-color: transparent;
+  border: none;
+  color: blue;
+  padding: 0.5rem;
+  font-family: "Lexend Deca", sans-serif;
+}
+
+.readmore button:hover {
+  background-color: rgb(246, 246, 246);
+  border-radius: 20px;
+}

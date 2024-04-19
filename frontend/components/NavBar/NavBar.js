@@ -3,18 +3,20 @@ import React from "react";
 import { useRouter } from "next/router"; // Import useRouter
 import Link from "next/link";
 import styles from "./NavBar.module.css"; // Ensure you create a corresponding CSS file for styling
+import { useAuth } from "../../context/AuthContext";
 
 const NavBar = () => {
+  const { user, logout } = useAuth();
   const router = useRouter();
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
 
   return (
     <nav className={styles.navbar}>
       <Link href="/">
-        <img
-          className={styles.bearimage}
-          src="/images/icon.png"
-          alt="Example"
-        />
+        <img className={styles.berkimage} src="/images/berk.png" />
       </Link>
       <div className={styles.navbarcontainer}>
         <button
@@ -30,12 +32,18 @@ const NavBar = () => {
           About Us
         </button>
 
-        <button
-          className={styles.scrollbutton}
-          onClick={() => router.push("/about")}
-        >
-          Contact
-        </button>
+        {!user ? (
+          <button
+            className={styles.scrollbutton}
+            onClick={() => router.push("/SignUp")}
+          >
+            Sign In
+          </button>
+        ) : (
+          <button className={styles.scrollbutton} onClick={handleLogout}>
+            Logout
+          </button>
+        )}
       </div>
     </nav>
   );

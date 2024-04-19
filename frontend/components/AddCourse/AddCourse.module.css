@@ -36,7 +36,7 @@
   width: 300px;
   margin: 20px;
   padding: 10px;
-  transition: background-color 0.3s ease;
+
   background-color: #77b0aa;
   border-radius: 10px;
   border: none;
@@ -47,5 +47,5 @@
 
 .message {
   font-size: 1rem;
-  color: darkblue;
+  color: #77b0aa;
 }

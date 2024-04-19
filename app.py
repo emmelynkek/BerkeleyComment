@@ -3,119 +3,104 @@ from flask_cors import CORS, cross_origin
 from flask_pymongo import PyMongo
 import certifi
 import bcrypt
+from bson import ObjectId
+from werkzeug.utils import secure_filename
+from bson import json_util
+from flask import request, current_app as app
+import base64
+import os
+from werkzeug.utils import secure_filename
 
-from bson.objectid import ObjectId
 # replace and check!
 
 app = Flask(__name__)
 CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-import os
-print(os.urandom(24))
 
-# hello is db name under the cluster comment in emmylynx@gmail account
-MONGO_URI ='mongodb+srv://emmylynx:TEyeZzZx97IF0ZpD@cluster0.cspxqhh.mongodb.net/hello?retryWrites=true&w=majority&appName=Cluster0&tls=true&tlsAllowInvalidCertificates=true'
+# hello is db name under the cluster remember in emmylynx@gmail account
+MONGO_URI ='mongodb+srv://emmelyn:8UFj649vhqFBAG7S@cluster0.bavtigl.mongodb.net/hello?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true'
 app.config['MONGO_URI'] = MONGO_URI
 mongo = PyMongo(app,tlsCAFile=certifi.where())
+# login_manager = LoginManager()
 app.secret_key='949d81bc5128e4c624d8d71c5683204525a25634a5f37cbd5b20607df7bb88c4'
+# login_manager.init_app(app)
+print(mongo)
+print(mongo.db)
+print(mongo.db.users)
 
 
 
 @app.route("/")
+@cross_origin()
 def home():
     return "Home"
 
-@app.route("/create_user", methods=["POST"])
-def register_user():
-    data = request.get_json()
-    email = data.get("email")
-    password = data.get("password")
-
-    if email and password:
-        users_collection = mongo.db.users #collections is called contact
-        if users_collection.find_one({"email": email}):
-            return jsonify({"message": "Email already exists."}), 409
-
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        user = {
-            "email": email,
-            "password": hashed_password
-        }
-        users_collection.insert_one(user)
-        return jsonify({"message": "User registered successfully"}), 201
-    else:
-        return jsonify({"message": "Missing email or password"}), 400
 
 
-@app.route("/add_course", methods=["POST"])
-def register_course():
-    data = request.get_json()
-    code = data.get("code")
+@app.route("/contactme", methods=["POST"]) 
+@cross_origin()
+def user_input():
+    data = request.get_json()  # Get data as JSON
     name = data.get("name")
+    email = data.get("email")
+    message = data.get("message")
 
-    if code and name:
-        courses_collection = mongo.db.courses 
-        if courses_collection.find_one({"code": code}):
-            return jsonify({"message": "Code already exists."}), 409
 
-      
-        course = {
-            "code": code,
-            "name": name
+    if name and email:
+        collection = mongo.db.contact #collection is users in db hello
+    
+    
+        data = {
+            "name": name,
+            "email": email, 
+            "message": message
         }
-        courses_collection.insert_one(course)
-        return jsonify({"message": "course registered successfully"}), 201
+
+
+        result = collection.insert_one(data)
+
+        return jsonify({"message": "Message sent successfully!"}),201
     else:
-        return jsonify({"message": "Missing code or name"}), 400
-
-@app.route("/get_courses", methods=["GET"])
-def get_courses():
-    courses_collection = mongo.db.courses
-    courses = list(courses_collection.find({}, {'code': 1, 'name': 1})) 
-    # {} for the first as this means that no query filter
-    # {'code': 1, 'name': 1}: This part of the .find() method is the projection. It specifies which fields to include in the returned documents. The 1 means "include this field"
-    # it is a list of objects
-    for course in courses:
-        course['_id'] = str(course['_id'])  # Convert ObjectId to string
-    return jsonify(courses)
-
-@app.route("/get_course/<course_id>", methods=["GET"])
-def get_course(course_id):
-    courses_collection = mongo.db.courses
-    course = courses_collection.find_one({"_id": ObjectId(course_id)})
-    if course:
-        course['_id'] = str(course['_id'])
-        return jsonify(course) # return json of course if found
-    else:
-        return jsonify({"error": "Course not found"}), 404
-
-# @app.route("/contactme", methods=["POST"]) 
-# @cross_origin()
-# def user_input():
-#     data = request.get_json()  # Get data as JSON
-#     name = data.get("name")
-#     email = data.get("email")
-#     message = data.get("message")
-
-
-#     if name and email:
-#         collection = mongo.db.contact #collection is users in db hello
+        return jsonify({"message": "Please enter both your name and email"}),400
     
+@app.route('/create_user', methods=['POST'])
+@cross_origin()
+def register_user():
+    # Check and log the data received
+  
+
+    # Retrieve image file from the form data
+    # if 'image' in request.files:
+    #     profile_image = request.files['image']
+    #     mongo.save_file(profile_image.filename,profile_image) # file name and binary data
+   
     
-#         data = {
-#             "name": name,
-#             "email": email, 
-#             "message": message
-#         }
+    # else:
+    #     return jsonify({'message': 'No image provided'}), 400
 
+    email = request.form['email']
+    password = request.form['password']
+    username = request.form['username']
 
-#         result = collection.insert_one(data)
+    # Check if user already exists
+    if mongo.db.users.find_one({'email': email}):
+        return jsonify({'message': 'User already exists'}), 409
 
-#         return jsonify({"message": "Message sent successfully!"}),201
-#     else:
-#         return jsonify({"message": "Please enter both your name and email"}),400
-    
+    # Hash the password
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
+    # Create user document
+    user_data = {
+        'username': username,
+        'email': email,
+        'password': hashed_password,
+        # 'profile_image': profile_image.filename  # Include the Base64 encoded image
+    }
+ 
+
+    # Insert user into the database
+    mongo.db.users.insert_one(user_data)
+    return jsonify({'message': 'User registered successfully'}), 201
 
 # @app.route("/create_user", methods=["POST"]) 
 # @cross_origin()
@@ -146,68 +131,146 @@ def get_course(course_id):
 #     else:
 #         return jsonify({"message": "Please enter both email and password"}),400
 
-# @app.route("/check_user", methods=["POST"])
-# def login_user():
-#     data = request.get_json()  
-#     email = data.get("email")
-#     password = data.get("password")
+@app.route("/login_user", methods=["POST"])
+@cross_origin()
+def login_user():
+    data = request.get_json()
+    email = data.get("email")
+    password = data.get("password")
 
-#     if email and password:
-#         collection = mongo.db.users  
-#         user = collection.find_one({"username": email})
+    if not email or not password:
+        return jsonify({"message": "Email and password are required"}), 400
 
-#         if user and bcrypt.checkpw(password.encode('utf-8'),user["password"]): 
-#             # create a session for user 
-#             session['user_id'] = str(user['_id'])
+    user = mongo.db.users.find_one({"email": email})
+    if user and bcrypt.checkpw(password.encode('utf-8'), user["password"]):
+        return jsonify({"message": "Login successful", "user_id": str(user["_id"])}), 200
+    else:
+        return jsonify({"message": "Invalid username or password"}), 401
 
-#             return jsonify({"user_id": str(user['_id'])}), 200
-  
-#         else: 
-#             return jsonify({"message": "Invalid username or password!"}), 401
-#     else: 
-#             return jsonify({"message": "Enter both email and password"}), 400
+
+@app.route("/add_course", methods=["POST"])
+@cross_origin()
+def register_course():
+    data = request.get_json()
+    code = data.get("code")
+    name = data.get("name")
+    info = data.get("info")
+
+    if code and name and info:
+        courses_collection = mongo.db.courses 
+        if courses_collection.find_one({"code": code}):
+            return jsonify({"message": "Code already exists."}), 409
+
+      
+        course = {
+            "code": code,
+            "name": name, 
+            "info": info
+        }
+        courses_collection.insert_one(course)
+        return jsonify({"message": "course registered successfully"}), 201
+    else:
+        return jsonify({"message": "Missing code or name"}), 400
+
     
+
+@app.route("/get_courses", methods=["GET"])
+@cross_origin()  
+def get_courses():
+    try:
+        courses_collection = mongo.db.courses
+        courses = list(courses_collection.find({}, {'code': 1, 'name': 1, 'info':1})) 
+        for course in courses:
+            course['_id'] = str(course['_id'])  # Convert ObjectId to string
+        return jsonify(courses)
+    except Exception as e:
+        app.logger.error(f"Error getting courses: {str(e)}")  # Log the error
+        return jsonify({"error": "Server error"}), 500
     
-# @app.route("/logout")
-# def logout():
-#     session["user_id"] = None
-#     return redirect("/")
+
+@app.route("/get_course/<course_id>", methods=["GET"])
+@cross_origin()
+def get_course(course_id):
+    courses_collection = mongo.db.courses
+    course = courses_collection.find_one({"_id": ObjectId(course_id)})
+    if course:
+        course['_id'] = str(course['_id'])  # Convert ObjectId to string for JSON compatibility
+        return jsonify(course)
+    else:
+        return jsonify({"error": "Course not found"}), 404
+
+
+@app.route("/add_review", methods=["POST"])
+@cross_origin()
+def register_review():
+    data = request.get_json()
+    print(data)
+    difficulty = data.get("difficulty")
+    workload = data.get("workload")
+    support = data.get("support")
+    engagement = data.get("engagement")
+    information =data.get("information")
+    courseid =data.get("courseid")
+    userid=data.get("userid")
+
+
+    if difficulty and workload and support and engagement and information and courseid:
+        reviews_collection = mongo.db.reviews 
+      
+        review = {
+            "difficulty": difficulty,
+            "workload": workload,
+            "support": support, 
+            "engagement": engagement, 
+            "information": information, 
+            "course_id": courseid, 
+            "user_id": userid,
+        }
+        reviews_collection.insert_one(review)
+        return jsonify({"message": "review added successfully"}), 201
+    else:
+        return jsonify({"message": "Missing field"}), 400
+
+
+    
+@app.route("/get_reviews/<course_id>", methods=["GET"])
+@cross_origin()
+def get_reviews(course_id): 
+    reviews_collection= mongo.db.reviews
+    try: 
+        reviews = list(reviews_collection.find({"course_id": course_id}))
+        for review in reviews: 
+            review['_id'] = str(review['_id'])
+        return jsonify(reviews)
+    except Exception as e: 
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/get_user/<user_id>", methods = ["GET"]) 
+@cross_origin()
+def get_user(user_id):
+    users_collection = mongo.db.users
+    user = users_collection.find_one({"_id": ObjectId(user_id)})
+    if user:
         
+        return jsonify(user['username'])
+    else:
+        return jsonify({"error": "user not found"}), 404
+
+from flask import current_app
+
+@app.route("/file/<filename>")  # Better to use filename directly
+@cross_origin()
+def get_file(filename):
+    try:
+        grid_fs_file = mongo.db.fs.files.find_one({'filename': filename})
+        if grid_fs_file is None:
+            return 'File not found', 404
+        return mongo.send_file(filename)
+    except Exception as e:
+        current_app.logger.error(f'Failed to send file: {str(e)}')
+        return 'Internal server error', 500
 
 
-# @app.route("/insert", methods=["POST"])
-# def insert_data():
-#     if 'user_id' in session:#CHECK! if this is the right way to check for session from react
-#         user_id = session['user_id'] 
-#         name = request.form.get("name")
-#         age = request.form.get("age")
-
-#         if name and age:
-#             data = {
-#                 "user_id": user_id, 
-#                 "name": name,
-#                 "age": int(age)
-#             }
-
-#             collection = mongo.db.sample_data # replace sample_data with collection name
-#             result = collection.insert_one(data)
-            
-#             return jsonify({"message": "Data inserted successfully", "inserted_id": str(result.inserted_id)})
-#         else:
-#             return jsonify({"message": "Please provide name and age"})
-#     else: 
-#         return render_template("login.html")
-
-# # update data based on user id? (another form)
-
-
-# # get data based on user id ?
-# @app.route("/data", methods=["GET"])
-# def list_users():
-#     collection = mongo.db.sample_data 
-#     users_data = collection.find({}, {"_id": 0, "name": 1, "age": 1}) # find with name and age being compulsory
-#     users_list = list(users_data)
-#     return jsonify(users_list)
 
 
 if __name__ == "__main__":

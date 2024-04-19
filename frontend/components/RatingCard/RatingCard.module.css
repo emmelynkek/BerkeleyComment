@@ -1,0 +1,14 @@
+.ratingcard {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: white;
+  border-radius: 20px;
+  padding: 1rem;
+}
+
+.ratingtitle {
+  margin: 0rem 1rem;
+}

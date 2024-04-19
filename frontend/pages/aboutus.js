@@ -1,5 +1,5 @@
 import Head from "next/head";
-import styles from "../styles/Courses.module.css";
+import styles from "../styles/Aboutus.module.css";
 import NavBar from "../components/NavBar/NavBar";
 import AddCourse from "../components/AddCourse/AddCourse";
 import axios from "axios";
@@ -8,7 +8,6 @@ import Link from "next/link";
 
 export default function Courses() {
   const [courses, setCourses] = useState([]);
-  const [showAddCourse, setShowAddCourse] = useState(false);
   useEffect(() => {
     //when courses component first mounted to dom, the useefect hook is triggered.
     // empty dependency array emans that  it will run once after initial render
@@ -40,44 +39,27 @@ export default function Courses() {
       <NavBar />
 
       <main>
-        <div className={styles.title}>Courses</div>
-
-        <div className={styles.grid}>
-          {courses.map((course) => (
-            <div className={styles.card}>
-              <Link key={course.code} href={`/course/${course._id}`}>
-                <h3>{course.code} &rarr;</h3>
-                <p>{course.name}</p>
-              </Link>
+        <div className={styles.title}>About Us</div>
+        <div className={styles.row}>
+          <img src="/images/coffee.jpeg" />
+          <div className={styles.comment}>
+            Welcome to Berkeley Comment Time, a review platform designed by
+            <div className={styles.blue}>
+              {" "}
+              Berkeley students, for Berkeley students.
             </div>
-          ))}
-
-          <div
-            className={styles.cardaddition}
-            onClick={() => setShowAddCourse(true)}
-          >
-            +
+            <br />
+            <br />
+            Navigating course selections can be daunting. Questions about
+            workload, teaching styles, and course rigor can cloud your
+            decision-making. But fear not! From deciphering the complexities of
+            a course syllabus to understanding the real workload of a class
+            beyond its credit hours -{" "}
+            <div className={styles.yellow}>
+              Our platform provides you with the resources to make informed
+              decisions.
+            </div>
           </div>
-        </div>
-        <div>
-          {" "}
-          <img className={styles.line} src="/images/line2.png" />
-        </div>
-        <div>
-          {/* <SignUp /> */}
-          {showAddCourse && (
-            <div className={styles.overlay}>
-              <div className={styles.addCourseContainer}>
-                <button
-                  className={styles.closeButton}
-                  onClick={() => setShowAddCourse(false)}
-                >
-                  X
-                </button>
-                <AddCourse onCourseAdded={handleCourseAdded} />
-              </div>
-            </div>
-          )}
         </div>
       </main>
 

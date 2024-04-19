@@ -5,11 +5,12 @@ import styles from "./AddCourse.module.css";
 export default function AddCourse({ onCourseAdded }) {
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
+  const [info, setInfo] = useState("");
   const [message, setMessage] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const course = { code, name };
+    const course = { code, name, info };
 
     axios
       .post("http://127.0.0.1:5000/add_course", course)
@@ -18,10 +19,11 @@ export default function AddCourse({ onCourseAdded }) {
         setMessage("Course added successfully!");
         setCode("");
         setName("");
+        setInfo("");
         onCourseAdded();
       })
       .catch((error) => {
-        console.error("Failed Addition of Course", error);
+        console.error("Failed Addition of course", error);
         setMessage("Failed to add course.");
       });
   };
@@ -47,6 +49,16 @@ export default function AddCourse({ onCourseAdded }) {
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+        <div className={styles.input}>
+          <div>Course Info:</div>
+          <input
+            type="info"
+            id="info"
+            value={info}
+            onChange={(e) => setInfo(e.target.value)}
             required
           />
         </div>

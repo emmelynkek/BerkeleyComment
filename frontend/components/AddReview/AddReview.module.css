@@ -1,0 +1,109 @@
+.form {
+  margin: 10px;
+  width: 100%;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+  padding: 2rem;
+}
+.title {
+  font-size: 2rem;
+}
+.top {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  
+}
+
+.backButton:hover {
+  opacity: 0.2;
+}
+.twocolumns {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 2rem;
+
+  width: 100%;
+}
+
+.firstcol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-right: 1rem;
+  font-size: 1.5rem;
+}
+
+.secondcol {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin: 0rem 1rem;
+}
+
+.field {
+  margin: 1rem;
+  margin-left: 0rem;
+}
+.ratingfield {
+  margin: 0.9rem;
+}
+
+.mainform {
+  width: 100%;
+  font-size: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-around;
+  min-height: 200px;
+}
+
+.input textarea {
+  border-radius: 5px;
+  width: 28rem;
+  border: 1px solid #ccc;
+  height: 20rem;
+  background-color: transparent;
+  padding: 20px;
+  font-size: 1rem;
+}
+.buttons {
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  font-size: 0.9rem;
+  font-family: "Lexend Deca";
+  font-weight: bold;
+  width: 120px;
+  margin: 20px;
+  padding: 10px;
+  background-color: #eae8e8;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+}
+.btn:hover {
+  background-color: #f4f1f1;
+}
+
+.message {
+  font-size: 1rem;
+  color: #77b0aa;
+}
