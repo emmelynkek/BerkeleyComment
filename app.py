@@ -18,7 +18,7 @@ CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 # hello is db name under the cluster remember in emmylynx@gmail account
-MONGO_URI ='mongodb+srv://emmelyn:8UFj649vhqFBAG7S@cluster0.bavtigl.mongodb.net/hello?retryWrites=true&w=majority&tls=true&tlsAllowInvalidCertificates=true'
+MONGO_URI ='NIL' # removed for security reasons.
 app.config['MONGO_URI'] = MONGO_URI
 mongo = PyMongo(app,tlsCAFile=certifi.where())
 # login_manager = LoginManager()
